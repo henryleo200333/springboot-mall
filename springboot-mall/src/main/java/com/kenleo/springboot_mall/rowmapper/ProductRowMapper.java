@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
+import com.kenleo.springboot_mall.constant.ProductCategory;
 import com.kenleo.springboot_mall.model.Product;
 
 public class ProductRowMapper implements RowMapper<Product> {
@@ -14,7 +15,7 @@ public class ProductRowMapper implements RowMapper<Product> {
 		Product product = new Product();
 		product.setProduct_id(rs.getInt("product_id"));
 		product.setProduct_name(rs.getString("product_name"));
-		product.setCategory(rs.getString("category"));
+		product.setCategory(ProductCategory.valueOf(rs.getString("category")));
 		product.setImage_url(rs.getString("image_url"));
 		product.setPrice(rs.getInt("price"));
 		product.setStock(rs.getInt("stock"));
