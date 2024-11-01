@@ -2,6 +2,7 @@ package com.kenleo.springboot_mall.service;
 
 import java.util.List;
 
+import com.kenleo.springboot_mall.constant.ProductCategory;
 import com.kenleo.springboot_mall.dto.ProductRequest;
 import com.kenleo.springboot_mall.model.Product;
 
@@ -15,5 +16,5 @@ public interface ProductService {
 	
 	void deleteProductById(Integer productId);
 	
-	List<Product> getProducts();
+	List<Product> getProducts(ProductCategory category, String search);
 }

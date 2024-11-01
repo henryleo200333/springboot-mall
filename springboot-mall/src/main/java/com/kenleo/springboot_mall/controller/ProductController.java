@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kenleo.springboot_mall.constant.ProductCategory;
 import com.kenleo.springboot_mall.dto.ProductRequest;
 import com.kenleo.springboot_mall.model.Product;
 import com.kenleo.springboot_mall.service.ProductService;
@@ -27,15 +28,15 @@ public class ProductController {
 	private ProductService productService;
 
 	@GetMapping("/products")
-	public ResponseEntity<List<Product>> getProducts(){
-		
-		List<Product> prodList = productService.getProducts();
-		
+	public ResponseEntity<List<Product>> getProducts(
+			@RequestParam(required = false) ProductCategory category,
+			@RequestParam(required = false) String search) {
+
+		List<Product> prodList = productService.getProducts(category, search);
+
 		return ResponseEntity.status(HttpStatus.OK).body(prodList);
 	}
-	
-	
-	
+
 	@GetMapping("/products/{productId}")
 	public ResponseEntity<Product> getProduct(@PathVariable Integer productId) {
 		Product product = productService.getProductById(productId);
@@ -55,23 +56,23 @@ public class ProductController {
 
 	@PutMapping("/products/{productId}")
 	public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,
-			                                     @RequestBody @Valid ProductRequest productRequest) {
-		//檢查是否存在
+			@RequestBody @Valid ProductRequest productRequest) {
+		// 檢查是否存在
 		Product product = productService.getProductById(productId);
-		if(product == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		
-		
+		if (product == null)
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
 		productService.updateProduct(productId, productRequest);
 		Product updatedProduct = productService.getProductById(productId);
 		return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
 	}
 
 	@DeleteMapping("/products/{productId}")
-	public ResponseEntity<?> deleteProduct(@PathVariable Integer productId){
-			
+	public ResponseEntity<?> deleteProduct(@PathVariable Integer productId) {
+
 		productService.deleteProductById(productId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-		
+
 	}
-	
+
 }

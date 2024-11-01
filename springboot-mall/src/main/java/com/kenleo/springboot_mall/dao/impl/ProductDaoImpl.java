@@ -12,6 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
+import com.kenleo.springboot_mall.constant.ProductCategory;
 import com.kenleo.springboot_mall.dao.ProductDao;
 import com.kenleo.springboot_mall.dto.ProductRequest;
 import com.kenleo.springboot_mall.model.Product;
@@ -99,10 +100,19 @@ public class ProductDaoImpl implements ProductDao {
 	}
 
 	@Override
-	public List<Product> getProducts() {
-		String sql = "select * from product";
+	public List<Product> getProducts(ProductCategory category, String search) {
+		String sql = "select * from product where 1=1";
 
 		Map<String, Object> map = new HashMap<>();
+		
+		if(category != null) {
+			map.put("category", category.name());
+			sql += " and category = :category";
+		}
+		if(search != null) {
+			map.put("search", "%" + search + "%");
+			sql += " and product_name like :search";
+		}
 		
 		List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 		
