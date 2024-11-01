@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.kenleo.springboot_mall.dao.ProductDao;
+import com.kenleo.springboot_mall.dto.ProductRequest;
 import com.kenleo.springboot_mall.model.Product;
 import com.kenleo.springboot_mall.service.ProductService;
 
@@ -15,8 +16,12 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product getProductById(Integer productId) {
-
 		return productDao.getProductById(productId);
+	}
+
+	@Override
+	public Integer createProduct(ProductRequest productRequest) {
+		return productDao.createProduct(productRequest);
 	}
 
 }

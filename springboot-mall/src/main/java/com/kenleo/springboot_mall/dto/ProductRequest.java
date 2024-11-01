@@ -1,29 +1,30 @@
-package com.kenleo.springboot_mall.model;
-
-import java.util.Date;
+package com.kenleo.springboot_mall.dto;
 
 import com.kenleo.springboot_mall.constant.ProductCategory;
 
-public class Product {
+import jakarta.validation.constraints.NotNull;
 
-	private Integer productId;
+/**
+ * 定義接值的檢核條件
+ */
+public class ProductRequest {
+
+	@NotNull
 	private String productName;
+
+	@NotNull
 	private ProductCategory category;
 
+	@NotNull
 	private String imageUrl;
+
+	@NotNull
 	private Integer price;
+
+	@NotNull
 	private Integer stock;
+
 	private String description;
-	private Date createdDate;
-	private Date lastModifiedDate;
-
-	public Integer getProductId() {
-		return productId;
-	}
-
-	public void setProductId(Integer productId) {
-		this.productId = productId;
-	}
 
 	public String getProductName() {
 		return productName;
@@ -71,22 +72,6 @@ public class Product {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-
-	public Date getLastModifiedDate() {
-		return lastModifiedDate;
-	}
-
-	public void setLastModifiedDate(Date lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
 	}
 
 }
