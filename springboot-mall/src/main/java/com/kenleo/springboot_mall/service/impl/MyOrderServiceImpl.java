@@ -16,6 +16,7 @@ import com.kenleo.springboot_mall.dao.ProductDao;
 import com.kenleo.springboot_mall.dao.UserDao;
 import com.kenleo.springboot_mall.dto.BuyItem;
 import com.kenleo.springboot_mall.dto.CreateOrderRequest;
+import com.kenleo.springboot_mall.dto.OrderQueryParams;
 import com.kenleo.springboot_mall.model.MyOrder;
 import com.kenleo.springboot_mall.model.OrderItem;
 import com.kenleo.springboot_mall.model.Product;
@@ -64,8 +65,8 @@ public class MyOrderServiceImpl implements MyOrderService {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 			}
 
-			productDao.updateStock(product.getProductId(), product.getStock()-item.getQuantity());
-			
+			productDao.updateStock(product.getProductId(), product.getStock() - item.getQuantity());
+
 			int amount = product.getPrice() * item.getQuantity();
 			totalAmount += amount;
 
@@ -94,6 +95,23 @@ public class MyOrderServiceImpl implements MyOrderService {
 		order.setOrderItemList(orderItemList);
 
 		return order;
+	}
+
+	@Override
+	public List<MyOrder> getOrders(OrderQueryParams orderQueryParams) {
+
+		List<MyOrder> orderList = myOrderDao.getOrders(orderQueryParams);
+
+		for (MyOrder order : orderList) {
+			List<OrderItem> orderItemList = myOrderDao.getOrderItemsByOrderId(order.getOrderId());
+			order.setOrderItemList(orderItemList);
+		}
+		return orderList;
+	}
+
+	@Override
+	public Integer countOrder(OrderQueryParams orderQueryParams) {
+		return myOrderDao.countOrder(orderQueryParams);
 	}
 
 }

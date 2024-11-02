@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import com.kenleo.springboot_mall.dao.MyOrderDao;
+import com.kenleo.springboot_mall.dto.OrderQueryParams;
 import com.kenleo.springboot_mall.model.MyOrder;
 import com.kenleo.springboot_mall.model.OrderItem;
 import com.kenleo.springboot_mall.rowmapper.MyOrderRowMapper;
@@ -92,11 +93,52 @@ public class MyOrderDaoImpl implements MyOrderDao {
 		Map<String, Object> map = new HashMap<>();
 		map.put("orderId", orderId);
 
-		
 		List<OrderItem> orderItemList = namedParameterJdbcTemplate.query(sql, map, new OrderItemRowMapper());
-		
+
 		return orderItemList;
+
+	}
+
+	@Override
+	public List<MyOrder> getOrders(OrderQueryParams orderQueryParams) {
+
+		String sql = "select * from myorder where 1=1";
+
+		Map<String, Object> map = new HashMap<>();
+
+		sql = addFilteringSql(sql, map, orderQueryParams);
+
+		sql += " ORDER BY created_date DESC";
+		sql += " Limit :limit OFFSET :offset";
+
+		map.put("limit", orderQueryParams.getLimit());
+		map.put("offset", orderQueryParams.getOffset());
 		
+		return namedParameterJdbcTemplate.query(sql, map, new MyOrderRowMapper());
+	}
+
+	@Override
+	public Integer countOrder(OrderQueryParams orderQueryParams) {
+
+		String sql = "SELECT count(*) FROM myorder where 1=1";
+
+		Map<String, Object> map = new HashMap<>();
+
+		sql = addFilteringSql(sql, map, orderQueryParams);
+
+		Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+
+		return total;
+
+	}
+
+	private String addFilteringSql(String sql, Map<String, Object> map, OrderQueryParams orderQueryParams) {
+		if (orderQueryParams.getUserId() != null) {
+			map.put("userId", orderQueryParams.getUserId());
+			sql += " and user_id = :userId";
+		}
+
+		return sql;
 	}
 
 }
