@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kenleo.springboot_mall.constant.ProductCategory;
+import com.kenleo.springboot_mall.dto.ProductQueryParams;
 import com.kenleo.springboot_mall.dto.ProductRequest;
 import com.kenleo.springboot_mall.model.Product;
 import com.kenleo.springboot_mall.service.ProductService;
@@ -32,7 +33,11 @@ public class ProductController {
 			@RequestParam(required = false) ProductCategory category,
 			@RequestParam(required = false) String search) {
 
-		List<Product> prodList = productService.getProducts(category, search);
+		ProductQueryParams productQueryParams = new ProductQueryParams();
+		productQueryParams.setCategory(category);
+		productQueryParams.setSearch(search);
+		
+		List<Product> prodList = productService.getProducts(productQueryParams);
 
 		return ResponseEntity.status(HttpStatus.OK).body(prodList);
 	}

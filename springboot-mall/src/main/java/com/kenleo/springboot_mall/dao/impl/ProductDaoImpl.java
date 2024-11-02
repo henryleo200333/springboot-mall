@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.kenleo.springboot_mall.constant.ProductCategory;
 import com.kenleo.springboot_mall.dao.ProductDao;
+import com.kenleo.springboot_mall.dto.ProductQueryParams;
 import com.kenleo.springboot_mall.dto.ProductRequest;
 import com.kenleo.springboot_mall.model.Product;
 import com.kenleo.springboot_mall.rowmapper.ProductRowMapper;
@@ -100,17 +101,17 @@ public class ProductDaoImpl implements ProductDao {
 	}
 
 	@Override
-	public List<Product> getProducts(ProductCategory category, String search) {
+	public List<Product> getProducts(ProductQueryParams productQueryParams) {
 		String sql = "select * from product where 1=1";
 
 		Map<String, Object> map = new HashMap<>();
 		
-		if(category != null) {
-			map.put("category", category.name());
+		if(productQueryParams.getCategory()!= null) {
+			map.put("category", productQueryParams.getCategory().name());
 			sql += " and category = :category";
 		}
-		if(search != null) {
-			map.put("search", "%" + search + "%");
+		if(productQueryParams.getSearch() != null) {
+			map.put("search", "%" + productQueryParams.getSearch() + "%");
 			sql += " and product_name like :search";
 		}
 		
