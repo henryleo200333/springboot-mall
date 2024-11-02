@@ -11,6 +11,7 @@ import com.kenleo.springboot_mall.dao.MyOrderDao;
 import com.kenleo.springboot_mall.dao.ProductDao;
 import com.kenleo.springboot_mall.dto.BuyItem;
 import com.kenleo.springboot_mall.dto.CreateOrderRequest;
+import com.kenleo.springboot_mall.model.MyOrder;
 import com.kenleo.springboot_mall.model.OrderItem;
 import com.kenleo.springboot_mall.model.Product;
 import com.kenleo.springboot_mall.service.MyOrderService;
@@ -51,6 +52,18 @@ public class MyOrderServiceImpl implements MyOrderService {
 		myOrderDao.createOrderItems(orderId, orderItemList);
 
 		return orderId;
+	}
+
+	@Override
+	public MyOrder getOrderById(Integer orderId) {
+
+		MyOrder order = myOrderDao.getOrderById(orderId);
+
+		List<OrderItem> orderItemList = myOrderDao.getOrderItemsByOrderId(orderId);
+
+		order.setOrderItemList(orderItemList);
+
+		return order;
 	}
 
 }
