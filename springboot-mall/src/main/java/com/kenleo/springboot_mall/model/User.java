@@ -2,10 +2,14 @@ package com.kenleo.springboot_mall.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class User {
 
 	private Integer userId;
 	private String email;
+
+	@JsonIgnore
 	private String password;
 	private Date createdDate;
 	private Date lastModifiedDate;
