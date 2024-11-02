@@ -92,12 +92,12 @@ public class ProductDaoImpl implements ProductDao {
 
 	@Override
 	public void deleteProductById(Integer productId) {
-		
+
 		String sql = "DELETE FROM product where product_id=:productId";
 		Map<String, Object> map = new HashMap<>();
 		map.put("productId", productId);
 		namedParameterJdbcTemplate.update(sql, map);
-				
+
 	}
 
 	@Override
@@ -105,26 +105,45 @@ public class ProductDaoImpl implements ProductDao {
 		String sql = "select * from product where 1=1";
 
 		Map<String, Object> map = new HashMap<>();
-		
-		if(productQueryParams.getCategory()!= null) {
+
+		if (productQueryParams.getCategory() != null) {
 			map.put("category", productQueryParams.getCategory().name());
 			sql += " and category = :category";
 		}
-		if(productQueryParams.getSearch() != null) {
+		if (productQueryParams.getSearch() != null) {
 			map.put("search", "%" + productQueryParams.getSearch() + "%");
 			sql += " and product_name like :search";
 		}
-		
+
 		sql += " ORDER BY " + productQueryParams.getOrderBy() + " " + productQueryParams.getSort();
-		
-		
+
 		sql += " LIMIT :limit OFFSET :offset";
 		map.put("limit", productQueryParams.getLimit());
 		map.put("offset", productQueryParams.getOffset());
-		
+
 		List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
-		
+
 		return productList;
+	}
+
+	@Override
+	public Integer countProduct(ProductQueryParams productQueryParams) {
+		String sql = "SELECT count(*) FROM product where 1=1";
+
+		Map<String, Object> map = new HashMap<>();
+
+		if (productQueryParams.getCategory() != null) {
+			map.put("category", productQueryParams.getCategory().name());
+			sql += " and category = :category";
+		}
+		if (productQueryParams.getSearch() != null) {
+			map.put("search", "%" + productQueryParams.getSearch() + "%");
+			sql += " and product_name like :search";
+		}
+
+		Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+
+		return total;
 	}
 
 }

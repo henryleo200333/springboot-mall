@@ -20,6 +20,7 @@ import com.kenleo.springboot_mall.dto.ProductQueryParams;
 import com.kenleo.springboot_mall.dto.ProductRequest;
 import com.kenleo.springboot_mall.model.Product;
 import com.kenleo.springboot_mall.service.ProductService;
+import com.kenleo.springboot_mall.util.Page;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -33,7 +34,7 @@ public class ProductController {
 	private ProductService productService;
 
 	@GetMapping("/products")
-	public ResponseEntity<List<Product>> getProducts(
+	public ResponseEntity<Page<Product>> getProducts(
 			// filtering
 			@RequestParam(required = false) ProductCategory category, @RequestParam(required = false) String search,
 
@@ -55,7 +56,15 @@ public class ProductController {
 
 		List<Product> prodList = productService.getProducts(productQueryParams);
 
-		return ResponseEntity.status(HttpStatus.OK).body(prodList);
+		Integer total = productService.countProduct(productQueryParams);
+		
+		Page<Product> page = new Page<>();
+		page.setResults(prodList);
+		page.setLimit(limit);
+		page.setOffset(offset);
+		page.setTotal(total);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(page);
 	}
 
 	@GetMapping("/products/{productId}")
